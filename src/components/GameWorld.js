@@ -1,6 +1,7 @@
 import React, { Component } from 'react';
 import Santa from './Santa';
 import Trees from './Trees';
+import ShowScore from './ShowScore';
 import './GameWorld.css';
 
 class GameWorld extends Component {
@@ -11,7 +12,8 @@ class GameWorld extends Component {
             sposY: 20,
             crashed: false
          },
-         trees: []
+         trees: [],
+         score: 0
       };
    }   
    
@@ -34,6 +36,7 @@ class GameWorld extends Component {
       this.moveTreesInterval = setInterval(() => {
          this.handleMoveTrees();
          this.detectCollision();
+         this.handleScore();
       }, refreshRate);
    }
    
@@ -45,8 +48,18 @@ class GameWorld extends Component {
 
    // randomize timer call
    randomInterval = () => {
-      return Math.floor(Math.random() * 750) + 500;
+      return Math.floor(Math.random() * 50) + 500;
    }
+
+   // get score by how long you're alive
+   handleScore = () => {
+      this.setState((prevState)=> {
+         return {
+            score: prevState.score + 10
+         }
+      })
+   }
+
 
    // pull santa down
    gravity = () => {
@@ -131,8 +144,8 @@ class GameWorld extends Component {
    }
 
    decideNumTreeGen = () => {
-      // if *3 then create 0 to 2 trees
-      return Math.floor(Math.random() * 3);
+      // if *4 then create 0 to 3 trees
+      return Math.floor(Math.random() * 4);
    }
 
    handleMoveTrees = () => {
@@ -163,11 +176,15 @@ class GameWorld extends Component {
 
    
    render() {
-      const { trees, santa } = this.state;
+      const { trees, santa, score } = this.state;
+      //console.log("score",score);
       return (
          <div className="world">
             <div>
                <Santa santa={santa} />
+            </div>
+            <div>
+               <ShowScore score={score} />
             </div>
             <div >
                <Trees trees={trees}/>
