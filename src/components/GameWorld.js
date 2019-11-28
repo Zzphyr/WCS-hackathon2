@@ -8,15 +8,16 @@ class GameWorld extends Component {
       super(props);
       this.state = {
          santa: {
-         sposY: 20,
-         crashed: false
+            sposY: 20,
+            crashed: false
          },
          trees: [
 /*             {
                tposX: 600,
                tposY: 0,
                velocity: 0,
-               isHit: false
+               isHit: false,
+               id: 0
             } */
          ]
       };
@@ -26,18 +27,17 @@ class GameWorld extends Component {
       // start listening
       document.addEventListener('keydown', this.handleKeyPress);
       setInterval(() => {
-         //this.gravity();
-         //this.handleMoveTrees();
-      }, 50);
+         this.gravity();
+         this.handleMoveTrees();
+      }, 100);
       setInterval(()=> {
-         //console.log(this.randomInterval())
-         //this.handleTreesGeneration();
+         this.handleTreesGeneration();
       }, this.randomInterval())
    }
 
    // randomize timer call
    randomInterval = () => {
-      return Math.floor(Math.random() * 1000) + 500;
+      return Math.floor(Math.random() * 2000) + 500;
    }
 
    // pull santa down
@@ -105,42 +105,92 @@ class GameWorld extends Component {
 
 
    handleTreesGeneration = () => {
-      let numTrees = this.decideNumTreeGen();
-      console.log("numTrees",numTrees);
-      this.setState(()=>{
-         let newX = 650;
+      let numTrees = Array(this.decideNumTreeGen()).fill("new tree");
+      let newX = 650;
+      for (let i in numTrees) {
          let newY = Math.floor(Math.random() * (400-30));
-         return {
-            trees: [
-               {
-               ...this.state.trees,
-               tposX: newX,
-               tposY: newY,
-               }
-            ]
-         }
-      })
+         let treeID = this.state.trees.length;
+         this.setState(()=>{
+            return {
+               trees: [
+                  ...this.state.trees,
+                  {
+                     tposX: newX,
+                     tposY: newY,
+                     tID: treeID,
+                     isHit: false
+                  }
+               ]
+            }
+         })
+      }
    }
 
    decideNumTreeGen = () => {
-      // if *4 then create 0 to 3 trees
-      return Math.floor(Math.random() * 4);
+      // if *3 then create 0 to 2 trees
+      return Math.floor(Math.random() * 3);
    }
 
-   //handleMoveTrees = () => {};
-   
+   handleMoveTrees = () => {
+      let currentTreeArray = this.state.trees;
 
+      currentTreeArray.forEach((el,i)=>{
+         console.log("el", el, "i", i)
+         this.setState(()=>{ 
+            el.tposX -= 5;
+            console.log("treesssss", this.state.trees)
+            /* return {
+               ...prevState,
+               trees:[newTreeArray]
+            } */
+         })
+      })
+   };
+/*    handleMoveTrees = () => {
+      let currentTreeArray = this.state.trees;
 
+      currentTreeArray.forEach((el,i)=>{
+         console.log("el", el, "i", i)
+         this.setState((prevState)=>{
+            console.log("prev", prevState)
+            let oldPosX = prevState.trees[i].tposX
+            let newPosX = oldPosX - 100;
+            console.log("old pos", prevState.trees[i].tposX, "new pos", newPosX)
+            el.tposX -= 50;
+            let newTreeArray = prevState.trees.push(el);
+            console.log('newTreeArray', newTreeArray)
+            return {
+               ...prevState,
+               trees:[newTreeArray]
+            }
+         })
+      })
+   }; */
 
+/* 
+   this.setState((prevState)  => {
+      const updatedList = prevState[list].includes(chosenOne) ?
+        prevState[list].filter((element) => element!==chosenOne) :
+        [...prevState[list], chosenOne];
+
+      return {
+        ...prevState,
+        [list]: updatedList
+      }
+    })
+ */
    
    render() {
       const { trees, santa } = this.state;
       //console.log("trees",trees);
-      console.log("type game",typeof trees)
       return (
          <div className="world">
-            <Santa santa={santa} />
-            <Trees trees={trees}/>
+            <div>
+               <Santa santa={santa} />
+            </div>
+            <div >
+               <Trees trees={trees}/>
+            </div>
          </div>
       )
    }
