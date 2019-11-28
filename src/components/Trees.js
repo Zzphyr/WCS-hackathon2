@@ -1,13 +1,17 @@
 import React from 'react';
+import Tree from './Tree';
 import './Trees.css';
 
-const Trees = ({ tree }) => {
-
-
+const Trees = ({ trees }) => {
    return (
-      <React.Fragment>
-         <div className="tree" style={{top: tree.tposY, left: tree.tposX}}> </div>
-      </React.Fragment>
+      <div>
+         {   
+         trees.map((el)=>{
+            //console.log("el", el)
+            return <Tree tree={el} />
+         })
+         }
+      </div>
    )
 }
 
