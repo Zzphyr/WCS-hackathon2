@@ -26,18 +26,33 @@ class GameWorld extends Component {
    componentDidMount() {
       // start listening
       document.addEventListener('keydown', this.handleKeyPress);
-      setInterval(() => {
+      const refreshRate = 50; 
+
+      // set gravity
+      this.gravInterval = setInterval(() => {
          this.gravity();
-         this.handleMoveTrees();
-      }, 100);
-      setInterval(()=> {
+      }, refreshRate);
+
+      // create trees
+      this.createTreesInterval = setInterval(()=> {
          this.handleTreesGeneration();
       }, this.randomInterval())
+
+      // move trees sideways
+      this.moveTreesInterval = setInterval(() => {
+         this.handleMoveTrees();
+      }, refreshRate);
+   }
+   
+   componentWillUnmount() {
+      clearInterval(this.gravInterval);   
+      clearInterval(this.createTreesInterval);   
+      clearInterval(this.moveTreesInterval);   
    }
 
    // randomize timer call
    randomInterval = () => {
-      return Math.floor(Math.random() * 2000) + 500;
+      return Math.floor(Math.random() * 750) + 500;
    }
 
    // pull santa down
@@ -102,14 +117,12 @@ class GameWorld extends Component {
       })
    }
 
-
-
    handleTreesGeneration = () => {
       let numTrees = Array(this.decideNumTreeGen()).fill("new tree");
-      let newX = 650;
+      let newX = 680;
       for (let i in numTrees) {
          let newY = Math.floor(Math.random() * (400-30));
-         let treeID = this.state.trees.length;
+         
          this.setState(()=>{
             return {
                trees: [
@@ -117,8 +130,8 @@ class GameWorld extends Component {
                   {
                      tposX: newX,
                      tposY: newY,
-                     tID: treeID,
-                     isHit: false
+                     //tID: treeID,
+                     isHit: false,
                   }
                ]
             }
@@ -133,56 +146,21 @@ class GameWorld extends Component {
 
    handleMoveTrees = () => {
       let currentTreeArray = this.state.trees;
-
-      currentTreeArray.forEach((el,i)=>{
-         console.log("el", el, "i", i)
-         this.setState(()=>{ 
-            el.tposX -= 5;
-            console.log("treesssss", this.state.trees)
-            /* return {
-               ...prevState,
-               trees:[newTreeArray]
-            } */
-         })
+      currentTreeArray.forEach((el, i)=>{
+         if (el.tposX < 5) {
+            this.setState(()=>{ 
+               currentTreeArray.splice(i,1);
+            })
+         } else {
+            this.setState(()=>{ 
+               el.tposX -= 5;
+            })
+         }
       })
-   };
-/*    handleMoveTrees = () => {
-      let currentTreeArray = this.state.trees;
-
-      currentTreeArray.forEach((el,i)=>{
-         console.log("el", el, "i", i)
-         this.setState((prevState)=>{
-            console.log("prev", prevState)
-            let oldPosX = prevState.trees[i].tposX
-            let newPosX = oldPosX - 100;
-            console.log("old pos", prevState.trees[i].tposX, "new pos", newPosX)
-            el.tposX -= 50;
-            let newTreeArray = prevState.trees.push(el);
-            console.log('newTreeArray', newTreeArray)
-            return {
-               ...prevState,
-               trees:[newTreeArray]
-            }
-         })
-      })
-   }; */
-
-/* 
-   this.setState((prevState)  => {
-      const updatedList = prevState[list].includes(chosenOne) ?
-        prevState[list].filter((element) => element!==chosenOne) :
-        [...prevState[list], chosenOne];
-
-      return {
-        ...prevState,
-        [list]: updatedList
-      }
-    })
- */
+   }
    
    render() {
       const { trees, santa } = this.state;
-      //console.log("trees",trees);
       return (
          <div className="world">
             <div>
