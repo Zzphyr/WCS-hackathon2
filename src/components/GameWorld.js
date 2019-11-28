@@ -11,22 +11,14 @@ class GameWorld extends Component {
             sposY: 20,
             crashed: false
          },
-         trees: [
-/*             {
-               tposX: 600,
-               tposY: 0,
-               velocity: 0,
-               isHit: false,
-               id: 0
-            } */
-         ]
+         trees: []
       };
    }   
    
    componentDidMount() {
       // start listening
       document.addEventListener('keydown', this.handleKeyPress);
-      const refreshRate = 50; 
+      const refreshRate = 40; 
 
       // set gravity
       this.gravInterval = setInterval(() => {
@@ -41,6 +33,7 @@ class GameWorld extends Component {
       // move trees sideways
       this.moveTreesInterval = setInterval(() => {
          this.handleMoveTrees();
+         this.detectCollision();
       }, refreshRate);
    }
    
@@ -73,13 +66,13 @@ class GameWorld extends Component {
 
    // move Santa uphill
    handleSantaMove = (dir) => {
-      // each jump is 50px
-      if (dir==='up' && this.state.santa.sposY > 50) {
-         dir = -50;
-      } else if (dir==='down') {
-         dir = +50;
-      }
       this.setState ((prevState)=>{
+         // each jump is 50px
+         if (dir==='up' && prevState.santa.sposY > 50) {
+            dir = -50;
+         } else if (dir==='down') {
+            dir = +50;
+         }
          return {
             santa: {
                ...prevState.santa,  
@@ -92,24 +85,24 @@ class GameWorld extends Component {
 
    // make Santa falldown (gravity)
    handleFallDown = () => {
-      let prevSantaHeight = this.state.santa.sposY;
-      let crash = this.state.santa.crashed;
-      let newSantaHeight = 0;
-      // div height is 400, santa is 30 right now
-      if (prevSantaHeight <= 400-31 && prevSantaHeight > -50) {
-         newSantaHeight = prevSantaHeight + 5;
-      } else if (prevSantaHeight > 400-31) {
-         console.log("On the floor!")
-         newSantaHeight = 400 - 30;
-         crash = true;
-      } else {
-         console.log("On the ceiling!")
-         newSantaHeight = 1;
-      }
-      this.setState(()=>{
+      this.setState((prevState)=>{
+         let prevSantaHeight = prevState.santa.sposY;
+         let crash = prevState.santa.crashed;
+         let newSantaHeight = 0;
+         // div height is 400, santa is 30 right now
+         if (prevSantaHeight <= 400-31 && prevSantaHeight > -50) {
+            newSantaHeight = prevSantaHeight + 5;
+         } else if (prevSantaHeight > 400-31) {
+            console.log("On the floor!")
+            newSantaHeight = 400 - 30;
+            crash = true;
+         } else {
+            console.log("On the ceiling!")
+            newSantaHeight = 1;
+         }
          return{
             santa: {
-               ...this.state.santa,
+               ...prevState.santa,
                sposY: newSantaHeight,
                crashed: crash
             }
@@ -118,19 +111,17 @@ class GameWorld extends Component {
    }
 
    handleTreesGeneration = () => {
-      let numTrees = Array(this.decideNumTreeGen()).fill("new tree");
-      let newX = 680;
-      for (let i in numTrees) {
-         let newY = Math.floor(Math.random() * (400-30));
-         
-         this.setState(()=>{
+      let numTrees = this.decideNumTreeGen();
+      for (let i=0; i<numTrees; i++) {
+         this.setState((prevState)=>{
+            let newX = 680;
+            let newY = Math.floor(Math.random() * (400-30));
             return {
                trees: [
-                  ...this.state.trees,
+                  ...prevState.trees,
                   {
                      tposX: newX,
                      tposY: newY,
-                     //tID: treeID,
                      isHit: false,
                   }
                ]
@@ -145,19 +136,31 @@ class GameWorld extends Component {
    }
 
    handleMoveTrees = () => {
-      let currentTreeArray = this.state.trees;
-      currentTreeArray.forEach((el, i)=>{
-         if (el.tposX < 5) {
-            this.setState(()=>{ 
+      this.setState((prevState) => { 
+         let currentTreeArray = prevState.trees;
+         currentTreeArray.forEach((el, i)=>{
+            if (el.tposX < 5) {
                currentTreeArray.splice(i,1);
-            })
-         } else {
-            this.setState(()=>{ 
+            } else {
                el.tposX -= 5;
-            })
+            }
+         })
+      })
+   }
+
+   detectCollision = () => {
+      let treeArray = this.state.trees;
+      let santaPosY = this.state.santa.sposY; 
+      treeArray.forEach((el) => {
+         // santa posX is 50, width is 30, height is 30
+         // tree width is 20
+         if (el.tposX < 50 + 30 && el.tposX + 20 > 50 && el.tposY < santaPosY + 30 && el.tposY + 20 > santaPosY) {
+            console.log("hit me baby")
          }
       })
    }
+
+
    
    render() {
       const { trees, santa } = this.state;
