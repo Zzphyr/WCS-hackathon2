@@ -5,27 +5,39 @@ import './GameWorld.css';
 
 class GameWorld extends Component {
    constructor(props) {
-     super(props);
-     this.state = {
-       santa: {
+      super(props);
+      this.state = {
+         santa: {
          sposY: 20,
          crashed: false
-       },
-       tree: {
-         tposX: 500,
-         tposY: 100,
-         velocity: 0
-       }
-     };
+         },
+         trees: [
+/*             {
+               tposX: 600,
+               tposY: 0,
+               velocity: 0,
+               isHit: false
+            } */
+         ]
+      };
    }   
    
    componentDidMount() {
       // start listening
       document.addEventListener('keydown', this.handleKeyPress);
       setInterval(() => {
-         this.gravity();
+         //this.gravity();
          //this.handleMoveTrees();
-      }, 500);
+      }, 50);
+      setInterval(()=> {
+         //console.log(this.randomInterval())
+         //this.handleTreesGeneration();
+      }, this.randomInterval())
+   }
+
+   // randomize timer call
+   randomInterval = () => {
+      return Math.floor(Math.random() * 1000) + 500;
    }
 
    // pull santa down
@@ -43,17 +55,6 @@ class GameWorld extends Component {
          this.handleSantaMove('down');
       }
    }
-   /*   // on keyboard press
-   handleKeyPress = (event) => {
-      // when pressing spacebar
-      if (event.key === "ArrowUp") {
-      this.handleMoveUp();
-      console.log("upme!");
-      } else if (event.key === "ArrowDown") {
-      this.handleFallDown();
-      console.log("going down");
-      }
-   } */
 
    // move Santa uphill
    handleSantaMove = (dir) => {
@@ -81,7 +82,7 @@ class GameWorld extends Component {
       let newSantaHeight = 0;
       // div height is 400, santa is 30 right now
       if (prevSantaHeight <= 400-31 && prevSantaHeight > -50) {
-         newSantaHeight = prevSantaHeight + 10;
+         newSantaHeight = prevSantaHeight + 5;
       } else if (prevSantaHeight > 400-31) {
          console.log("On the floor!")
          newSantaHeight = 400 - 30;
@@ -91,23 +92,55 @@ class GameWorld extends Component {
          newSantaHeight = 1;
       }
       this.setState(()=>{
-      return{
-         santa: {
-            ...this.state.santa,
-            sposY: newSantaHeight,
-            crashed: crash
+         return{
+            santa: {
+               ...this.state.santa,
+               sposY: newSantaHeight,
+               crashed: crash
+            }
          }
-      }
       })
    }
+
+
+
+   handleTreesGeneration = () => {
+      let numTrees = this.decideNumTreeGen();
+      console.log("numTrees",numTrees);
+      this.setState(()=>{
+         let newX = 650;
+         let newY = Math.floor(Math.random() * (400-30));
+         return {
+            trees: [
+               {
+               ...this.state.trees,
+               tposX: newX,
+               tposY: newY,
+               }
+            ]
+         }
+      })
+   }
+
+   decideNumTreeGen = () => {
+      // if *4 then create 0 to 3 trees
+      return Math.floor(Math.random() * 4);
+   }
+
+   //handleMoveTrees = () => {};
+   
+
+
+
    
    render() {
-      const { tree, santa } = this.state;
-      //console.log(santa);
+      const { trees, santa } = this.state;
+      //console.log("trees",trees);
+      console.log("type game",typeof trees)
       return (
          <div className="world">
             <Santa santa={santa} />
-            <Trees tree={tree}/>
+            <Trees trees={trees}/>
          </div>
       )
    }
