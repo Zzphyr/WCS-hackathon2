@@ -1,8 +1,6 @@
 .santa {
-   background-image: URL(https://i.imgur.com/eVxovjr.gif);
+   background-image: url(../img/giphy1.gif);
    background-size: contain;
-   width: 30px;
-   height: 30px;
    position: relative;
    left: 50px;
    border: 1px solid orangered;

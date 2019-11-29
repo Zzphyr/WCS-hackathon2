@@ -1,0 +1,13 @@
+.play-btn {
+   background: honeydew;
+   padding: 1em 2em;
+   color: black;
+   text-decoration: none;
+   border-radius: 10px;
+   transition: all 150ms ease-out;
+}
+
+.play-btn:hover {
+   background: indianred;
+   color: ivory;
+}
