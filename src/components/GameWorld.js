@@ -5,15 +5,25 @@ import ShowGameInfo from './ShowGameInfo';
 import { withRouter } from 'react-router-dom';
 import './GameWorld.css';
 
+// declaring constants
+const jumpH = 50;
+const areaH = 400;
+const areaW = 700;
+const treeSize = 20;
+const santaSize = 30;
+
+
 class GameWorld extends Component {
    constructor(props) {
       super(props);
       this.state = {
          santa: {
+            sposX: 50,
             sposY: 20,
             crashed: false,
             life: 3,
-            tookDamage: false
+            tookDamage: false,
+            sSize: santaSize,
          },
          trees: [],
          score: 0,
@@ -26,6 +36,9 @@ class GameWorld extends Component {
       // start listening
       document.addEventListener('keydown', this.handleKeyPress);
       const refreshRate = 40; 
+
+      // set the timer
+      this.setTimer();
 
       // set gravity
       this.gravInterval = setInterval(() => {
@@ -46,12 +59,10 @@ class GameWorld extends Component {
       // detect collision and reset santa damaged status
       this.detectCol = setInterval(() => {
          this.detectCollision();
-         
       }, 220);
-
    }
 
-   // randomize timer call
+   // randomize create trees timer
    randomInterval = () => {
       return Math.floor(Math.random() * 50) + 500;
    }
@@ -63,6 +74,15 @@ class GameWorld extends Component {
             score: prevState.score + 10
          }
       })
+   }
+
+   setTimer = () => {
+      this.timerInterval = setInterval(() => {
+         this.setState((prevState) => ({
+           ...prevState,
+           time: prevState.time +1,
+         }))
+      }, 1000)
    }
 
    // pull santa down
@@ -85,10 +105,10 @@ class GameWorld extends Component {
    handleSantaMove = (dir) => {
       this.setState ((prevState)=>{
          // each jump is 50px
-         if (dir==='up' && prevState.santa.sposY > 50) {
-            dir = -50;
+         if (dir==='up' && prevState.santa.sposY > jumpH) {
+            dir = -jumpH;
          } else if (dir==='down') {
-            dir = +50;
+            dir = +jumpH;
          }
          return {
             santa: {
@@ -105,23 +125,27 @@ class GameWorld extends Component {
       this.setState((prevState)=>{
          let prevSantaHeight = prevState.santa.sposY;
          let crash = prevState.santa.crashed;
+         let damage = prevState.santa.tookDamage;
          let newSantaHeight = 0;
          // div height is 400, santa is 30 right now
-         if (prevSantaHeight <= 400-31 && prevSantaHeight > -50) {
+         if (prevSantaHeight <= areaH-santaSize && prevSantaHeight > -jumpH) {
             newSantaHeight = prevSantaHeight + 5;
-         } else if (prevSantaHeight > 400-31) {
-            console.log("On the floor!")
-            newSantaHeight = 400 - 30;
+         } else if (prevSantaHeight > areaH-santaSize) {
+            console.log("Hit the floor!")
             crash = true;
+            damage = true;
+            newSantaHeight = areaH-santaSize;
+            this.gameOver();
          } else {
-            console.log("On the ceiling!")
+            console.log("Hit the ceiling!")
             newSantaHeight = 1;
          }
          return{
             santa: {
                ...prevState.santa,
                sposY: newSantaHeight,
-               crashed: crash
+               crashed: crash,
+               tookDamage: damage,
             }
          }
       })
@@ -131,14 +155,15 @@ class GameWorld extends Component {
       let numTrees = this.decideNumTreeGen();
       for (let i=0; i<numTrees; i++) {
          this.setState((prevState)=>{
-            let newX = 680;
-            let newY = Math.floor(Math.random() * (400-30));
+            let newX = areaW-treeSize;
+            let newY = Math.floor(Math.random() * (areaH-treeSize));
             return {
                trees: [
                   ...prevState.trees,
                   {
                      tposX: newX,
                      tposY: newY,
+                     tSize: treeSize
                   }
                ]
             }
@@ -167,17 +192,17 @@ class GameWorld extends Component {
    detectCollision = () => {
       this.setState((prevState)=> {
          let treeArray = prevState.trees;
-         let santaPosY = prevState.santa.sposY; 
+         let santa = prevState.santa; 
          treeArray.forEach((el) => {
             // santa posX is 50, width is 30, height is 30
             // tree width is 20
-            if (el.tposX < 50 + 30 && el.tposX + 20 > 50 && el.tposY < santaPosY + 30 && el.tposY + 20 > santaPosY) {
+            if (el.tposX < santa.sposX + santaSize && el.tposX + treeSize > santa.sposX && el.tposY < santa.sposY + santaSize && el.tposY + treeSize > santa.sposY) {
                console.log("hit me baby")
                // damage Santa
-               if (prevState.santa.life > 0) {
+               if (prevState.santa.life >= 1) {
                   setTimeout(()=>{
                      this.resetSantaTookDamage();
-                  }, 200)
+                  }, 180)
                   this.setState((prevState)=> {
                      return {
                         santa: {
@@ -209,7 +234,7 @@ class GameWorld extends Component {
    }
 
    gameOver = () => {
-      console.log("DEAD!")
+      clearInterval(this.timerInterval);   
       clearInterval(this.gravInterval);   
       clearInterval(this.createTreesInterval);   
       clearInterval(this.moveTreesInterval);   
@@ -218,17 +243,14 @@ class GameWorld extends Component {
          // to allow use of withRouter
          const { history } = this.props;
          history.push('/result');
-      }, 1000);
-      console.log("name",this.state.score, this.state.time)
+      }, 700);
       this.props.onSetScoreTime(this.state.score, this.state.time);
    }
    
    
    render() {
       const { trees, santa, score } = this.state;
-      console.log("santa", santa.tookDamage)
-      return (
-         
+      return (  
          <div className={!santa.tookDamage ? "world" : "redworld"}>
             <Santa santa={santa} />
             <ShowGameInfo score={score} santa={santa} />

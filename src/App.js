@@ -3,6 +3,8 @@ import { BrowserRouter, Route, Switch } from 'react-router-dom';
 import Home from './components/Home';
 import GameWorld from './components/GameWorld';
 import Result from './components/Result';
+import About from './components/About';
+import Help from './components/Help';
 import './App.css';
 
 class App extends Component {
@@ -11,7 +13,6 @@ class App extends Component {
     this.state = {
       time: 0,
       score: 0,
-      name: "hello"
     };
   }
 
@@ -31,9 +32,11 @@ class App extends Component {
       <div className="App">
         <BrowserRouter>
           <Switch>
-            <Route exact path='/home' component={Home} />
+            <Route exact path='/' component={Home} />
+            <Route path='/about' component={About} />
+            <Route path='/help' component={Help} />
             <Route 
-              exact path='/' 
+              exact path='/game' 
               render={()=> (
                 <GameWorld
                   onSetScoreTime={this.handleSetScoreTime} 
