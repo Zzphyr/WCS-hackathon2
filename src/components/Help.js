@@ -4,8 +4,6 @@ import './Help.css';
 
 const Help = () => {
 
-   
-
    return (
       <main>
          <h1>help</h1>

@@ -6,11 +6,11 @@ import { withRouter } from 'react-router-dom';
 import './GameWorld.css';
 
 // declaring constants
-const jumpH = 50;
-const areaH = 400;
-const areaW = 700;
-const treeSize = 20;
-const santaSize = 30;
+const jumpH = 75;
+const areaH = 700;
+const areaW = 1000;
+const treeSize = 45;
+const santaSize = 90;
 
 
 class GameWorld extends Component {
@@ -57,9 +57,10 @@ class GameWorld extends Component {
       }, refreshRate);
       
       // detect collision and reset santa damaged status
+      // increase time to make santa less sensitive to damage
       this.detectCol = setInterval(() => {
          this.detectCollision();
-      }, 220);
+      }, 700);
    }
 
    // randomize create trees timer
@@ -199,22 +200,21 @@ class GameWorld extends Component {
             if (el.tposX < santa.sposX + santaSize && el.tposX + treeSize > santa.sposX && el.tposY < santa.sposY + santaSize && el.tposY + treeSize > santa.sposY) {
                console.log("hit me baby")
                // damage Santa
-               if (prevState.santa.life >= 1) {
-                  setTimeout(()=>{
-                     this.resetSantaTookDamage();
-                  }, 180)
-                  this.setState((prevState)=> {
-                     return {
-                        santa: {
-                           ...prevState.santa,
-                           tookDamage: true,
-                           life: prevState.santa.life -1,
-                        }
+               setTimeout(()=>{
+                  this.resetSantaTookDamage();
+               }, 280)  
+               this.setState((prevState)=> {
+                  return {
+                     santa: {
+                        ...prevState.santa,
+                        tookDamage: true,
+                        life: prevState.santa.life -1,
                      }
-                  })
-               } else {
+                  }
+               })
+               if (prevState.santa.life === 1) {
                   this.gameOver();
-               }
+               } 
             }
          })
       })
@@ -243,7 +243,7 @@ class GameWorld extends Component {
          // to allow use of withRouter
          const { history } = this.props;
          history.push('/result');
-      }, 700);
+      }, 280);
       this.props.onSetScoreTime(this.state.score, this.state.time);
    }
    
@@ -251,7 +251,7 @@ class GameWorld extends Component {
    render() {
       const { trees, santa, score } = this.state;
       return (  
-         <div className={!santa.tookDamage ? "world" : "redworld"}>
+         <div className={!santa.tookDamage ? "world" : "redworld"} >
             <Santa santa={santa} />
             <ShowGameInfo score={score} santa={santa} />
             <Trees trees={trees} />

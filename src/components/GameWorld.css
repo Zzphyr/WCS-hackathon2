@@ -3,16 +3,20 @@
    position: relative;
    top: 10vh;
    margin: auto;
-   height: 400px;
-   width: 700px;
+   height: 700px;
+   width: 1000px;
+   border-bottom: 15px solid rgb(90, 53, 28);
+   outline-offset: -5px;
 }
 
 
 .redworld {
-   background: rgba(202, 39, 39, 0.349);
+   background: rgb(202, 39, 39);
    position: relative;
    top: 10vh;
    margin: auto;
-   height: 400px;
-   width: 700px;
+   height: 700px;
+   width: 1000px;
+   border-bottom: 15px solid rgb(90, 53, 28);
+   outline-offset: -5px;
 }

@@ -1,7 +1,7 @@
 .santa {
-   background-image: url(../img/giphy1.gif);
+   background-image: url(../img/santa.gif);
    background-size: contain;
    position: relative;
    left: 50px;
-   border: 1px solid orangered;
+   border-radius: 50%;
 }
