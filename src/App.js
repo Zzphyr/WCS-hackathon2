@@ -33,7 +33,6 @@ class App extends Component {
         <BrowserRouter>
           <Switch>
             <Route exact path='/' component={Home} />
-            <Route path='/about' component={About} />
             <Route path='/help' component={Help} />
             <Route 
               exact path='/game' 
@@ -48,12 +47,13 @@ class App extends Component {
               path='/result' 
               render={()=> (
                 <Result
-                score={this.state.score} 
-                time={this.state.time}            
+                  score={this.state.score} 
+                  time={this.state.time}            
                 />
               )} 
             />
           </Switch>
+            <About />
         </BrowserRouter>
       </div>
     )

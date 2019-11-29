@@ -1,16 +1,13 @@
 import React from 'react';
-import { Link } from "react-router-dom";
 import './About.css';
 
 const About = () => {
-
-   
-
    return (
-      <main>
-         <h1>About</h1>
-         <Link to="/" className="goHome-btn">home sweet home</Link>
-      </main>
+      <footer>
+         <p>
+            Lovingly built by Santa's little helper - <a href="https://www.linkedin.com/in/manuela-cardoso-94b6b829/">LinkedIn</a> <a href="https://github.com/Zzphyr/">Github</a> - 2019
+         </p>
+      </footer>
    )
 }
 

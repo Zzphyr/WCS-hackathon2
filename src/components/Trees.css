@@ -1,7 +1,5 @@
 .tree {
    background-image: url(../img/tree.png);
    background-size: contain;
-   width: 20px;
-   height: 20px;
    position: relative;
 }
