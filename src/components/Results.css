@@ -1,17 +1,47 @@
-.goHome-btn {
-   background: honeydew;
+.goHome-btn, .saveScore-btn {
+   background: indianred;
+   color: ivory;
    padding: 1em 2em;
-   color: black;
    text-decoration: none;
    border-radius: 10px;
    transition: all 150ms ease-out;
+   margin: 1vh;
+   width: 140px;
 }
 
-.goHome-btn:hover {
-   background: indianred;
-   color: ivory;
+.goHome-btn:hover, .saveScore-btn:hover {
+   background: honeydew;
+   color: black;
+}
+
+.inresult-btns {
+   display: flex;
+   flex-direction: column;
+   justify-content: center;
+   align-items: center;
 }
 
 .result-title {
+   padding-top: 5vh;
+   color: rgb(255, 36, 36);
+   font-family: 'Mountains of Christmas', cursive;
+}
+
+.result-subtitle {
    color: ivory;
+   padding-bottom: 2vh;
+}
+
+.result-gamedata {
+   display: flex;
+   justify-content: center;
+}
+
+.result-gamedata p {
+   padding: 20px;
+}
+
+.result-img {
+   height: 40vh;
+   margin-bottom: 1vh;
 }

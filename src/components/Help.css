@@ -1,0 +1,22 @@
+.help-img {
+   height: 15vh;
+}
+
+.help-title {
+   padding-top: 3vh;
+   color: rgb(243, 78, 78);
+   font-size:50px;
+   font-family: 'Mountains of Christmas', cursive;
+}
+
+.help-story {
+   color: rgb(255, 145, 145);
+   font-size: larger;
+   line-height: 2em;
+   padding: 0 20vw 3vh 20vw;
+   font-style: italic;
+}
+
+.arraykeys {
+   padding-bottom: 3vh;
+}

@@ -8,7 +8,7 @@ import './GameWorld.css';
 // declaring constants
 const jumpH = 75;
 const areaH = 700;
-const areaW = 1000;
+const areaW = 1050;
 const treeSize = 45;
 const santaSize = 90;
 
@@ -60,7 +60,7 @@ class GameWorld extends Component {
       // increase time to make santa less sensitive to damage
       this.detectCol = setInterval(() => {
          this.detectCollision();
-      }, 700);
+      }, 720);
    }
 
    // randomize create trees timer
@@ -123,14 +123,14 @@ class GameWorld extends Component {
 
    // make Santa falldown (gravity)
    handleFallDown = () => {
-      this.setState((prevState)=>{
+      this.setState((prevState) => {
          let prevSantaHeight = prevState.santa.sposY;
          let crash = prevState.santa.crashed;
          let damage = prevState.santa.tookDamage;
          let newSantaHeight = 0;
          // div height is 400, santa is 30 right now
          if (prevSantaHeight <= areaH-santaSize && prevSantaHeight > -jumpH) {
-            newSantaHeight = prevSantaHeight + 5;
+            newSantaHeight = prevSantaHeight + 7;
          } else if (prevSantaHeight > areaH-santaSize) {
             console.log("Hit the floor!")
             crash = true;
@@ -181,10 +181,10 @@ class GameWorld extends Component {
       this.setState((prevState) => { 
          let currentTreeArray = prevState.trees;
          currentTreeArray.forEach((el, i)=>{
-            if (el.tposX < 5) {
+            if (el.tposX < 7) {
                currentTreeArray.splice(i,1);
             } else {
-               el.tposX -= 5;
+               el.tposX -= 7;
             }
          })
       })
@@ -212,7 +212,7 @@ class GameWorld extends Component {
                      }
                   }
                })
-               if (prevState.santa.life === 1) {
+               if (prevState.santa.life <= 1) {
                   this.gameOver();
                } 
             }
@@ -243,7 +243,7 @@ class GameWorld extends Component {
          // to allow use of withRouter
          const { history } = this.props;
          history.push('/result');
-      }, 280);
+      }, 300);
       this.props.onSetScoreTime(this.state.score, this.state.time);
    }
    

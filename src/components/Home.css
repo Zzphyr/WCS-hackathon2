@@ -1,13 +1,165 @@
-.play-btn {
-   background: honeydew;
+.play-btn,
+.help-btn {
+   background: indianred;
+   color: ivory;
    padding: 1em 2em;
-   color: black;
    text-decoration: none;
    border-radius: 10px;
    transition: all 150ms ease-out;
+   width: 100px;
+   margin: 2vh;
 }
 
-.play-btn:hover {
-   background: indianred;
-   color: ivory;
+.play-btn:hover,
+.help-btn:hover {
+   background: honeydew;
+   color: black;
+}
+
+.inhome-btns {
+   display: flex;
+   flex-direction: column;
+   justify-content: center;
+   align-items: center;
+   height: 30vh;
+}
+
+.home-main {
+   height: 80vh;
+   overflow: hidden;
+}
+
+.homeimg {
+   height: 20vh;
+   filter: brightness(0.8);
+}
+
+.homeimg:hover {
+   animation: shake 0.82s cubic-bezier(.36,.07,.19,.97) both;
+   transform: translate3d(0, 0, 0);
+   backface-visibility: hidden;
+   perspective: 1000px;
+ }
+ 
+ @keyframes shake {
+   10%, 90% {
+     transform: translate3d(-1px, 0, 0);
+   }
+   
+   20%, 80% {
+     transform: translate3d(2px, 0, 0);
+   }
+ 
+   30%, 50%, 70% {
+     transform: translate3d(-4px, 0, 0);
+   }
+ 
+   40%, 60% {
+     transform: translate3d(4px, 0, 0);
+   }
+ }
+
+.home-title {
+   font-size: 5rem;
+   padding-top: 10vh;
+   text-shadow: 1px 1px 19px rgba(43, 43, 43, 0.644);
+   font-family: 'Mountains of Christmas', cursive;
+}
+
+.bgimg {
+   background-image: url(https://i.imgur.com/WzYmkxD.png);
+   background-size: cover;
+   height: 85vh;
+   width: 85vw;
+   filter: blur(10px);
+   position: absolute;
+   top: 50%;
+   left: 50%;
+   transform: translate(-50%, -50%);
+   z-index: -2;
+}
+
+/* snowfall */
+.snow-container {
+   position: absolute;
+   height: 100%;
+   width: 100%;
+   max-width: 100%;
+   top: 0;
+   overflow: hidden;
+   z-index: 2;
+   pointer-events: none;
+
+}
+
+.snow {
+   display: block;
+   position: absolute;
+   z-index: 2;
+   top: 0;
+   right: 0;
+   bottom: 0;
+   left: 0;
+   pointer-events: none;
+   -webkit-transform: translate3d(0, -100%, 0);
+   transform: translate3d(0, -100%, 0);
+   -webkit-animation: rgb(255, 250, 250) linear infinite;
+   animation: snow linear infinite;
+}
+
+.snow.foreground {
+   background-image: url("https://dl6rt3mwcjzxg.cloudfront.net/assets/snow/snow-large-075d267ecbc42e3564c8ed43516dd557.png");
+   -webkit-animation-duration: 15s;
+   animation-duration: 15s;
+}
+
+.snow.foreground.layered {
+   -webkit-animation-delay: 7.5s;
+   animation-delay: 7.5s;
+}
+
+.snow.middleground {
+   background-image: image-url("https://dl6rt3mwcjzxg.cloudfront.net/assets/snow/snow-medium-0b8a5e0732315b68e1f54185be7a1ad9.png");
+   -webkit-animation-duration: 20s;
+   animation-duration: 20s;
+}
+
+.snow.middleground.layered {
+   -webkit-animation-delay: 10s;
+   animation-delay: 10s;
+}
+
+.snow.background {
+   background-image: image-url("https://dl6rt3mwcjzxg.cloudfront.net/assets/snow/snow-small-1ecd03b1fce08c24e064ff8c0a72c519.png");
+   -webkit-animation-duration: 30s;
+   animation-duration: 30s;
+}
+
+.snow.background.layered {
+   -webkit-animation-delay: 15s;
+   animation-delay: 15s;
+}
+
+@-webkit-keyframes snow {
+   0% {
+      -webkit-transform: translate3d(0, -100%, 0);
+      transform: translate3d(0, -100%, 0);
+   }
+
+   100% {
+      -webkit-transform: translate3d(15%, 100%, 0);
+      transform: translate3d(15%, 100%, 0);
+   }
+}
+
+@keyframes snow {
+   0% {
+      -webkit-transform: translate3d(0, -100%, 0);
+      transform: translate3d(0, -100%, 0);
+   }
+
+   100% {
+      -webkit-transform: translate3d(15%, 100%, 0);
+      transform: translate3d(15%, 100%, 0);
+   }
 }
