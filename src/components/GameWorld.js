@@ -1,7 +1,8 @@
 import React, { Component } from 'react';
 import Santa from './Santa';
 import Trees from './Trees';
-import ShowScore from './ShowScore';
+import ShowGameInfo from './ShowGameInfo';
+import { withRouter } from 'react-router-dom';
 import './GameWorld.css';
 
 class GameWorld extends Component {
@@ -10,10 +11,14 @@ class GameWorld extends Component {
       this.state = {
          santa: {
             sposY: 20,
-            crashed: false
+            crashed: false,
+            life: 3,
+            tookDamage: false
          },
          trees: [],
-         score: 0
+         score: 0,
+         isGameOver: false,
+         time: 0
       };
    }   
    
@@ -31,19 +36,19 @@ class GameWorld extends Component {
       this.createTreesInterval = setInterval(()=> {
          this.handleTreesGeneration();
       }, this.randomInterval())
-
+      
       // move trees sideways
       this.moveTreesInterval = setInterval(() => {
          this.handleMoveTrees();
-         this.detectCollision();
          this.handleScore();
       }, refreshRate);
-   }
-   
-   componentWillUnmount() {
-      clearInterval(this.gravInterval);   
-      clearInterval(this.createTreesInterval);   
-      clearInterval(this.moveTreesInterval);   
+      
+      // detect collision and reset santa damaged status
+      this.detectCol = setInterval(() => {
+         this.detectCollision();
+         
+      }, 220);
+
    }
 
    // randomize timer call
@@ -59,7 +64,6 @@ class GameWorld extends Component {
          }
       })
    }
-
 
    // pull santa down
    gravity = () => {
@@ -135,7 +139,6 @@ class GameWorld extends Component {
                   {
                      tposX: newX,
                      tposY: newY,
-                     isHit: false,
                   }
                ]
             }
@@ -144,7 +147,7 @@ class GameWorld extends Component {
    }
 
    decideNumTreeGen = () => {
-      // if *4 then create 0 to 3 trees
+      // if *4 then create 0 to 3 trees per column
       return Math.floor(Math.random() * 4);
    }
 
@@ -162,36 +165,77 @@ class GameWorld extends Component {
    }
 
    detectCollision = () => {
-      let treeArray = this.state.trees;
-      let santaPosY = this.state.santa.sposY; 
-      treeArray.forEach((el) => {
-         // santa posX is 50, width is 30, height is 30
-         // tree width is 20
-         if (el.tposX < 50 + 30 && el.tposX + 20 > 50 && el.tposY < santaPosY + 30 && el.tposY + 20 > santaPosY) {
-            console.log("hit me baby")
+      this.setState((prevState)=> {
+         let treeArray = prevState.trees;
+         let santaPosY = prevState.santa.sposY; 
+         treeArray.forEach((el) => {
+            // santa posX is 50, width is 30, height is 30
+            // tree width is 20
+            if (el.tposX < 50 + 30 && el.tposX + 20 > 50 && el.tposY < santaPosY + 30 && el.tposY + 20 > santaPosY) {
+               console.log("hit me baby")
+               // damage Santa
+               if (prevState.santa.life > 0) {
+                  setTimeout(()=>{
+                     this.resetSantaTookDamage();
+                  }, 200)
+                  this.setState((prevState)=> {
+                     return {
+                        santa: {
+                           ...prevState.santa,
+                           tookDamage: true,
+                           life: prevState.santa.life -1,
+                        }
+                     }
+                  })
+               } else {
+                  this.gameOver();
+               }
+            }
+         })
+      })
+   } 
+
+   resetSantaTookDamage = () => {
+      this.setState((prevState)=> {
+         if(prevState.santa.tookDamage) {
+            return {
+               santa: {
+                  ...prevState.santa,
+                  tookDamage: false,
+               }
+            }
          }
       })
    }
 
-
+   gameOver = () => {
+      console.log("DEAD!")
+      clearInterval(this.gravInterval);   
+      clearInterval(this.createTreesInterval);   
+      clearInterval(this.moveTreesInterval);   
+      clearInterval(this.detectCol); 
+      setTimeout(()=>{
+         // to allow use of withRouter
+         const { history } = this.props;
+         history.push('/result');
+      }, 1000);
+      console.log("name",this.state.score, this.state.time)
+      this.props.onSetScoreTime(this.state.score, this.state.time);
+   }
+   
    
    render() {
       const { trees, santa, score } = this.state;
-      //console.log("score",score);
+      console.log("santa", santa.tookDamage)
       return (
-         <div className="world">
-            <div>
-               <Santa santa={santa} />
-            </div>
-            <div>
-               <ShowScore score={score} />
-            </div>
-            <div >
-               <Trees trees={trees}/>
-            </div>
+         
+         <div className={!santa.tookDamage ? "world" : "redworld"}>
+            <Santa santa={santa} />
+            <ShowGameInfo score={score} santa={santa} />
+            <Trees trees={trees} />
          </div>
       )
    }
 }
 
-export default GameWorld;
+export default withRouter(GameWorld);
