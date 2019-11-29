@@ -1,0 +1,63 @@
+.score-main {
+   text-align: center;
+}
+
+.score-title {
+   padding-top: 5vh;
+   font-size: 50px;
+   color: rgb(231, 27, 0);
+   font-family: 'Mountains of Christmas', cursive;
+}
+
+.score-table {
+   margin: 50px auto;
+   width: 50vw;
+}
+
+.score-table td, table th {
+   border: 1px solid rgb(68, 128, 0);
+}
+
+th {
+   padding: 1em 3em;
+   background: rgb(218, 70, 70);
+}
+
+tr {
+   background: rgb(74, 161, 86);
+}
+
+td {
+   padding: 1em 3em;
+}
+.score-table tr:nth-child(even){
+   background: #5aac4160;
+}
+
+.score-note {
+   font-size: smaller;
+}
+
+.scoreform {
+   margin: 3vh;
+}
+
+.scoreform label {
+   margin-right: 1vw;
+}
+.scoreform input:first-child {
+   height: 15px;
+}
+
+.submitnamebtn {
+   margin: 0 5px;
+   border-radius: 5px;
+   background: rgb(3, 110, 3);
+   border: green;
+   color: honeydew;
+   padding: 0.5em 1em;
+}
+
+.submitnamebtn:hover {
+   background: rgb(14, 151, 14);
+}

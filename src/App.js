@@ -5,6 +5,7 @@ import GameWorld from './components/GameWorld';
 import Result from './components/Result';
 import About from './components/About';
 import Help from './components/Help';
+import Scoreboard from './components/Scoreboard';
 import './App.css';
 
 class App extends Component {
@@ -13,6 +14,7 @@ class App extends Component {
     this.state = {
       time: 0,
       score: 0,
+      data: []
     };
   }
 
@@ -26,8 +28,25 @@ class App extends Component {
    })
   }
 
- 
+  handleSave = (event, userName) => {
+    event.preventDefault();
+    this.setState((prevState)=>{
+       return {
+          ...prevState,
+          data: [
+             ...prevState.data,
+             {
+                name: userName,
+                score: this.state.score
+             }
+          ]
+       }
+    })
+  };
+
   render() { 
+    const { score, time, data } = this.state;
+    console.log("ss",data)
     return (
       <div className="App">
         <BrowserRouter>
@@ -38,8 +57,7 @@ class App extends Component {
               exact path='/game' 
               render={()=> (
                 <GameWorld
-                  onSetScoreTime={this.handleSetScoreTime} 
-                  name={this.state.name}            
+                  onSetScoreTime={this.handleSetScoreTime}            
                 />
               )} 
             />
@@ -47,8 +65,18 @@ class App extends Component {
               path='/result' 
               render={()=> (
                 <Result
-                  score={this.state.score} 
-                  time={this.state.time}            
+                  score={score} 
+                  time={time}         
+                />
+              )} 
+            />
+            <Route 
+              path='/scoreboard'
+              render={()=> (
+                <Scoreboard
+                  score={score}  
+                  data={data}   
+                  onSetUserData={this.handleSave}     
                 />
               )} 
             />

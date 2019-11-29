@@ -1,0 +1,22 @@
+footer {
+   position:absolute;
+   width:100%;
+   bottom:0px;
+   margin-bottom: 1vh;
+}
+
+footer p {
+   color: gray;
+   font-style: italic;
+   font-size: small;
+}
+
+footer p a {
+   color:rgb(173, 173, 173);
+   text-decoration: none;
+}
+
+footer p a:hover {
+   color:rgb(209, 95, 95);
+   text-decoration: none;
+}

@@ -1,22 +1,27 @@
-.world {
+.world, .redworld {
    background: #DBD9DB;
    position: relative;
    top: 10vh;
    margin: auto;
    height: 700px;
-   width: 1000px;
+   width: 1050px;
    border-bottom: 15px solid rgb(90, 53, 28);
-   outline-offset: -5px;
 }
-
 
 .redworld {
    background: rgb(202, 39, 39);
+}
+
+/* from ShowGameInfo.js */
+.ingame-info {
+   display: flex;
+   justify-content: center;
    position: relative;
-   top: 10vh;
-   margin: auto;
-   height: 700px;
-   width: 1000px;
-   border-bottom: 15px solid rgb(90, 53, 28);
-   outline-offset: -5px;
+   top: -50px;
+}
+
+.ingame-info p {
+   color: rgb(34, 97, 9);
+   padding: 0 50px;
+   z-index: 100;
 }
